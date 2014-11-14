@@ -20,7 +20,7 @@ module Rack
         @force_ssl = options[:force_ssl]
         @ignore = Array(options[:ignore])
         @if = Array(options[:if])
-        @permanent = (options[:permanent] || true)
+        @permanent = (options[:permanent].nil? ? true : options[:permanent])
       end
 
       def canonical?

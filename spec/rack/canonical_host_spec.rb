@@ -162,6 +162,22 @@ describe Rack::CanonicalHost do
       end
     end
 
+    context 'with :permanent option' do
+      context 'when :permanent is true' do
+        let(:app) { build_app('www.example.com', :permanent => true) }
+        let(:url) { 'http://example.com/full/path' }
+
+        it { should be_redirect.via(301).to('http://www.example.com/full/path') }
+      end
+
+      context 'when :permanent is false' do
+        let(:app) { build_app('www.example.com', :permanent => false) }
+        let(:url) { 'http://example.com/full/path' }
+
+        it { should be_redirect.via(302).to('http://www.example.com/full/path') }
+      end
+    end
+
     context 'with a block' do
       let(:app) { build_app { 'example.com' } }
 
