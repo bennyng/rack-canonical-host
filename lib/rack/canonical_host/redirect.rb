@@ -20,6 +20,7 @@ module Rack
         @force_ssl = options[:force_ssl]
         @ignore = Array(options[:ignore])
         @if = Array(options[:if])
+        @permanent = (options[:permanent] || true)
       end
 
       def canonical?
@@ -28,7 +29,7 @@ module Rack
 
       def response
         headers = { 'Location' => new_url, 'Content-Type' => 'text/html' }
-        [301, headers, [HTML_TEMPLATE % new_url]]
+        [permanent? ? 301 : 302, headers, [HTML_TEMPLATE % new_url]]
       end
 
     private
@@ -43,6 +44,10 @@ module Rack
 
       def ignored?
         @ignore && @ignore.include?(request_uri.host)
+      end
+
+      def permanent?
+        @permanent
       end
 
       def conditions_match?
